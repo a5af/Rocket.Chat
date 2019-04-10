@@ -22,7 +22,7 @@ const RocketChatAssetsInstance = new RocketChatFile.GridFS({
 const assets = {
 	logo: {
 		label: 'logo (svg, png, jpg)',
-		defaultUrl: 'images/logo/logo.svg',
+		defaultUrl: 'images/logo/ss-sun-logo.png',
 		constraints: {
 			type: 'image',
 			extensions: ['svg', 'png', 'jpg', 'jpeg'],
