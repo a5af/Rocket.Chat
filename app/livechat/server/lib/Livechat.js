@@ -86,7 +86,7 @@ export const Livechat = {
 				return true;
 			}
 			const onlineAgents = LivechatDepartmentAgents.getOnlineForDepartment(dept._id);
-			return onlineAgents.count() > 0;
+			return onlineAgents && onlineAgents.count() > 0;
 		});
 	},
 	getRoom(guest, message, roomInfo, agent) {
@@ -232,7 +232,9 @@ export const Livechat = {
 			updateUser.$set.name = name;
 		}
 
-		if (department) {
+		if (!department) {
+			Object.assign(updateUser, { $unset: { department: 1 } });
+		} else {
 			const dep = LivechatDepartment.findOneByIdOrName(department);
 			updateUser.$set.department = dep && dep._id;
 		}
@@ -313,6 +315,9 @@ export const Livechat = {
 			msg: comment,
 			groupable: false,
 		};
+
+		// Retreive the closed room
+		room = Rooms.findOneByIdOrName(room._id);
 
 		sendMessage(user, message, room);
 
@@ -534,7 +539,7 @@ export const Livechat = {
 		// get the agents of the department
 		if (departmentId) {
 			const agents = Livechat.getAgents(departmentId);
-			if (agents.count() === 0) {
+			if (!agents || agents.count() === 0) {
 				return false;
 			}
 
